@@ -111,28 +111,23 @@ example are in `references/outreach.md`. Never send anything — these are draft
 Write the queue to a **Google Sheet** so the team can review and send. First read
 `references/output-config.json` and follow its `mode`:
 
-**`mode: "append-webapp"` (default — one shared, ever-growing sheet).** Every run appends into the
-single master sheet at `masterSheetUrl` via a bound Apps Script web app, so all campaigns live in one
-place and stay auto-formatted.
+**`mode: "new-sheet-in-folder"` (default).** Create **one new Google Sheet per run** inside the shared
+Drive folder (`driveFolderId`):
 
-1. Build the prospect rows as a JSON array of arrays — one inner array per qualified prospect, values
-   in the exact `columns` order from the config, `Status` = `Draft`. (Do **not** send a header row;
-   the master sheet already has one.)
-2. POST them to the web app with Bash `curl` (it follows the Apps Script redirect with `-L`):
-   ```
-   curl -sL -X POST "<webAppUrl>" -H "Content-Type: application/json" \
-     -d '{"token":"<token>","rows":[[...],[...]]}'
-   ```
-   A success response looks like `{"ok":true,"appended":N,"total":M}`. Give the user the
-   `masterSheetUrl` so they can open it.
-3. **If `webAppUrl` is still the placeholder, empty, or the POST fails** (non-`ok` or curl error),
-   fall back to the create-new-sheet path below and tell the user the pipeline isn't wired up yet
-   (point them at `references/output-config.json` + the Apps Script web-app setup).
+1. Build the CSV (header row from `columns` + one row per qualified prospect, `Status` = `Draft`).
+2. Create the sheet with the Drive connector's `create_file`, passing `contentMimeType: "text/csv"`
+   (so it converts to a native Sheet) and `parentId: <driveFolderId>` so it lands in the folder.
+   Title it from `sheetTitlePattern`, e.g. `Backlink Prospects — <campaign or date>`.
+3. Put rejected/notable domains in a second `… — Skipped` sheet in the same folder.
+4. Give the user the new sheet link **and** the `driveFolderUrl`.
 
-**`mode: "new-sheet"` (or any fallback).** If a Google Drive/Sheets MCP connector is available,
-create a new spreadsheet titled `Backlink Prospects — <campaign or date>` (upload CSV content with
-`contentMimeType: text/csv` so it converts to a native Sheet) and write a header row + one row per
-prospect.
+Note: CometChat's Google Workspace **blocks anonymous Apps Script web apps**, so we can't append into
+one master sheet automatically — each run gets its own dated sheet in the folder instead. The new
+sheet imports unformatted; if the user wants it styled, point them at the optional one-click
+`formatLatest` Apps Script (it finds the newest sheet in the folder and applies freeze/clip/widths/
+banding/filter). Don't block on formatting.
+
+**Fallback (`mode: "new-sheet"` or no folder):** create the sheet the same way without a `parentId`.
 
 **Last-resort fallback:** if no connector is available, write a `prospects.csv` to the working
 directory with the same columns and tell the user they can import it into Google Sheets

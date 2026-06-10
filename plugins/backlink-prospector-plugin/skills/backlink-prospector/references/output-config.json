@@ -1,9 +1,9 @@
 {
-  "mode": "append-webapp",
-  "_comment": "How this skill outputs results. mode=append-webapp posts every run's prospects to one shared Google Sheet via a bound Apps Script web app. If webAppUrl is empty or the POST fails, fall back to creating a new Google Sheet (create_file), then to a local CSV.",
-  "masterSheetUrl": "https://docs.google.com/spreadsheets/d/18Vhr4BMRwlfDSS-SCcEQJF0NZjMsRfD507UerMBMJcQ/edit",
-  "webAppUrl": "https://script.google.com/macros/s/AKfycbzNPHg5WqgxQkNCb3qJArHI2s7ZySUsBacuHtSg_I-kKf5AD8Svp4otaEhBI0qwQM62/exec",
-  "token": "cc_blp_7Kq9mZ2wRtX4",
+  "mode": "new-sheet-in-folder",
+  "_comment": "How this skill outputs results. mode=new-sheet-in-folder creates one new Google Sheet per run inside the shared Drive folder below (via create_file with contentMimeType text/csv, which converts to a native Sheet). Note: CometChat's Google Workspace blocks anonymous Apps Script web apps, so in-place append to a single sheet is not possible — each run gets its own dated sheet in the folder instead. If create_file is unavailable, fall back to a local prospects.csv.",
+  "driveFolderId": "1emm6cl_F12JMXsZwCzAJG8gLkqT7gheQ",
+  "driveFolderUrl": "https://drive.google.com/drive/folders/1emm6cl_F12JMXsZwCzAJG8gLkqT7gheQ",
+  "sheetTitlePattern": "Backlink Prospects — {campaign-or-date}",
   "columns": [
     "Domain", "Ranking URL", "Keyword", "Quality label", "Score", "Why it matched",
     "Domain Rating", "Monthly Traffic", "Contact name", "Contact email", "Contact role",
