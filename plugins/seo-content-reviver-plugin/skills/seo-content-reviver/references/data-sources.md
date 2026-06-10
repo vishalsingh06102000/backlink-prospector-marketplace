@@ -21,14 +21,23 @@ Call `management-projects` (free). Pick the project whose `url`/`mode` matches t
 
 ### Stage 2 — discover pages: `gsc-pages` (cheap)
 Per-page snapshot over a date window: `page, clicks, impressions, ctr, position, keywords_count,
-top_keyword, traffic_value`. Use `where` to filter (e.g. `clicks gt <floor>`) and `limit` to cap.
-`traffic_value` (USD) is what we use to **prioritize** flagged pages. Requires `date_from` (+ optional
-`date_to`). In testing this returned **0 units**.
+top_keyword, traffic_value`. `traffic_value` (USD) is what we use to **prioritize** flagged pages.
+Requires `date_from` (+ optional `date_to`). In testing this returned **0 units**.
+
+**Get EVERY page (default), don't sample.** Set a high `limit` (e.g. 1000) and **paginate** — keep
+pulling until a page returns no new rows — so you have the whole site, not the top 50. Apply only the
+traffic floor as a filter; never cap to a top-N. Restrict to specific URLs/sections only if the user
+asked for that.
 
 ### Stage 3 — per-page history: `gsc-page-history` ⭐ (cheap — the backbone)
 Input: `pages` (comma-separated URLs), `project_id`, `date_from`, `history_grouping: monthly`.
 Returns, per page per month: `clicks, impressions, ctr, position`. This is the time series we compute
-peak + recent + decay from. Returned **0 units** in testing. Batch multiple URLs per call via `pages`.
+peak + recent + decay from. Returned **0 units** in testing.
+
+**⚠️ 100-row response cap.** A call returns at most ~100 rows, and a 16-month lookback is ~20 rows per
+page — so pass **at most ~5 pages per call** in `pages`, and **loop over the full page list in batches
+of 5** until every page from Stage 2 has history. Don't stop after one batch (that's how an earlier
+run accidentally covered only a sample). Since these calls are free, full-site coverage costs nothing.
 
 > **⚠️ Data-freshness caveat (important).** GSC data here lags. In testing, monthly data ran cleanly
 > from 2024 through **December 2025**, but the current calendar month returned "No GSC data available".

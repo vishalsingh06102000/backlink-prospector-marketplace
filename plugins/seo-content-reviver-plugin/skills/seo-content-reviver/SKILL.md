@@ -42,31 +42,42 @@ Collect these up front; reuse anything already given, only ask for gaps. This is
 non-technical marketer — keep it plain.
 
 - **Site** — the domain to audit (default `cometchat.com`).
-- **Scope** — whole site, or a section like `/blog` or `/tutorials` (default: whole site).
+- **Scope** — **default is the WHOLE site: every page/endpoint.** Only narrow this when the user
+  *explicitly* names specific pages or a section (e.g. "just the blog", "only these 3 URLs"). Never
+  silently sample or cap — if you can't cover everything in one pass, page through until you have.
 - **Sensitivity** — *Conservative* / *Balanced* / *Sensitive* (default **Balanced**). Sets how big and
   sustained a drop must be to count as decay — see `references/decay-detection.md`. Don't make the
   user think in percentages.
 - **Lookback** — how far back to measure the peak (default ~16 months, monthly).
-- **Minimum traffic floor** — ignore tiny pages (default: skip pages under ~50 clicks/mo at peak).
-- **How many pages** to report (default ~50, ranked by lost value).
+- **Minimum traffic floor** — only to keep noise out (default: skip pages whose *peak* never reached
+  ~50 clicks/mo, since a page that never had traffic can't "decay"). This is a noise filter, **not** a
+  coverage cap — every page above it is analyzed.
 
-If the user is vague, propose sensible defaults from context (CometChat → whole site, Balanced) and let
-them correct you.
+Default to full coverage. Do **not** cap to a top-N or analyze a sample unless the user asks. Report
+**every** flagged page (ranked by lost value), not a truncated list. GSC calls are free (see
+`references/data-sources.md`), so checking the whole site costs no Ahrefs units — there's no reason to
+sample.
+
+If the user is vague, use these defaults (CometChat → whole site, Balanced) and let them correct you.
 
 ## Stage 2 — Discover pages
 
-Resolve the Ahrefs **project** and pull the candidate page list. Full tool details, params, and the
-known data-freshness caveat are in `references/data-sources.md`. In short: list projects
-(`management-projects`), pick the one matching the site/scope, pull the per-page snapshot
-(`gsc-pages`) over the most recent available window, keep pages above the traffic floor, and cap to a
-sensible top-N by traffic value to bound the work.
+Resolve the Ahrefs **project** and pull the **complete** candidate page list. Full tool details,
+params, the 100-row cap, and the known data-freshness caveat are in `references/data-sources.md`. In
+short: list projects (`management-projects`), pick the one matching the site/scope, then pull the
+per-page snapshot (`gsc-pages`) over the most recent available window **with a high `limit` and
+paginate until no more pages return** — get *every* page, not the top 50. Drop only pages below the
+traffic floor (noise). Do not cap to a top-N. (If the user named specific pages/sections, restrict to
+those instead.)
 
 ## Stage 3 — Pull history
 
-For each kept page, pull its **monthly metric history** (`gsc-page-history`): clicks, impressions,
-average position, CTR. **Auto-detect the latest available month** — GSC data here can lag several
-months, so "recent" means the latest months that actually have data, not the calendar month. Record
-the page's full series for the lookback window.
+Pull **monthly metric history** (`gsc-page-history`) for **every** kept page: clicks, impressions,
+average position, CTR. **Batch in small groups — at most ~5 pages per call** — because the API caps a
+response at ~100 rows and a 16-month lookback is ~20 rows per page (5 × 20 = 100). Loop over all the
+pages from Stage 2 in these batches so none are dropped; never stop after the first batch. **Auto-detect
+the latest available month** — GSC data here can lag several months, so "recent" means the latest months
+that actually have data, not the calendar month. Record each page's full series for the lookback window.
 
 ## Stage 4 — Detect decay
 
