@@ -10,6 +10,11 @@
       "name": "backlink-prospector-plugin",
       "source": "./plugins/backlink-prospector-plugin",
       "description": "Find realistic backlink prospects from keywords + competitors, score them with live Ahrefs metrics, find contacts, draft personalized outreach, and append the queue to a shared Google Sheet."
+    },
+    {
+      "name": "seo-content-reviver-plugin",
+      "source": "./plugins/seo-content-reviver-plugin",
+      "description": "Watch published pages for SEO decay vs each page's historical peak, diagnose the likely cause, and recommend a specific fix per page — into a Google Sheet. Recommend-only."
     }
   ]
 }

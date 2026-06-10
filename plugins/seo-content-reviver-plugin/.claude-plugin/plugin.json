@@ -1,0 +1,10 @@
+{
+  "name": "seo-content-reviver-plugin",
+  "description": "Watch published pages for SEO decay (clicks/impressions/rankings falling vs each page's peak), diagnose the likely cause, and recommend a specific fix per page — written into a Google Sheet. Recommend-only.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Vishal Singh",
+    "email": "vishal.singh@cometchat.com"
+  },
+  "keywords": ["seo", "content decay", "content refresh", "search console", "ahrefs", "marketing"]
+}

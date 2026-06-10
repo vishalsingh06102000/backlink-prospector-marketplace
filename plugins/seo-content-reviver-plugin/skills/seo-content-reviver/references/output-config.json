@@ -1,0 +1,14 @@
+{
+  "mode": "new-sheet-in-folder",
+  "_comment": "Each run creates a new dated Google Sheet inside the shared Drive folder below, via create_file with contentMimeType text/csv (converts to a native Sheet) and parentId = driveFolderId. CometChat's Workspace blocks anonymous Apps Script web apps, so we don't append in place. If create_file is unavailable, fall back to a local decay-report.csv.",
+  "driveFolderId": "1SyRZdsSokApsoFQo6TmoS9X5DJ29yYM-",
+  "driveFolderUrl": "https://drive.google.com/drive/folders/1SyRZdsSokApsoFQo6TmoS9X5DJ29yYM-",
+  "ahrefsProjectId": 3292255,
+  "sheetTitlePattern": "SEO Content Decay Report — {date}",
+  "dataFreshnessNote": "GSC data via Ahrefs can lag several months; auto-detect the latest available month and label the report 'as of <month>'.",
+  "columns": [
+    "Page URL", "Page title", "Primary keyword", "Peak period", "Peak clicks/mo",
+    "Recent clicks/mo", "% drop", "Lost clicks/mo", "Impressions trend", "Position (now vs peak)",
+    "Likely cause", "Recommended action", "Why", "Priority", "Severity", "Status"
+  ]
+}
