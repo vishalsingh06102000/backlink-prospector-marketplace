@@ -1,0 +1,15 @@
+{
+  "name": "cometchat-marketing",
+  "owner": {
+    "name": "Vishal Singh",
+    "email": "vishal.singh@cometchat.com"
+  },
+  "description": "CometChat marketing skills for Claude Code.",
+  "plugins": [
+    {
+      "name": "backlink-prospector-plugin",
+      "source": "./plugins/backlink-prospector-plugin",
+      "description": "Find realistic backlink prospects from keywords + competitors, score them with live Ahrefs metrics, find contacts, draft personalized outreach, and append the queue to a shared Google Sheet."
+    }
+  ]
+}

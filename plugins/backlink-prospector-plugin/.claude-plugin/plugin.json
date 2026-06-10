@@ -1,0 +1,10 @@
+{
+  "name": "backlink-prospector-plugin",
+  "description": "Find realistic backlink prospects from keywords + competitors, score them with live Ahrefs metrics, find contacts, draft personalized outreach, and append the queue to a shared Google Sheet.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Vishal Singh",
+    "email": "vishal.singh@cometchat.com"
+  },
+  "keywords": ["seo", "backlinks", "outreach", "link building", "marketing"]
+}
