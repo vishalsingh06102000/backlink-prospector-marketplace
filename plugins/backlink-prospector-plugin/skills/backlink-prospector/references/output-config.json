@@ -2,7 +2,7 @@
   "mode": "append-webapp",
   "_comment": "How this skill outputs results. mode=append-webapp posts every run's prospects to one shared Google Sheet via a bound Apps Script web app. If webAppUrl is empty or the POST fails, fall back to creating a new Google Sheet (create_file), then to a local CSV.",
   "masterSheetUrl": "https://docs.google.com/spreadsheets/d/18Vhr4BMRwlfDSS-SCcEQJF0NZjMsRfD507UerMBMJcQ/edit",
-  "webAppUrl": "PASTE_YOUR_APPS_SCRIPT_/exec_URL_HERE",
+  "webAppUrl": "https://script.google.com/macros/s/AKfycbzNPHg5WqgxQkNCb3qJArHI2s7ZySUsBacuHtSg_I-kKf5AD8Svp4otaEhBI0qwQM62/exec",
   "token": "cc_blp_7Kq9mZ2wRtX4",
   "columns": [
     "Domain", "Ranking URL", "Keyword", "Quality label", "Score", "Why it matched",
