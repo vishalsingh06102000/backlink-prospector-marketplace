@@ -1,0 +1,19 @@
+{
+  "name": "seo-pipeline-plugin",
+  "description": "Carry a topic or page through the full SEO lifecycle and hand back a review-ready brief — target keywords, a SERP-derived outline, on-page checklist, internal links, and an optimized meta title + description — written into a Google Sheet. Recommend-only.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Vishal Singh",
+    "email": "vishal.singh@cometchat.com"
+  },
+  "keywords": [
+    "seo",
+    "keyword research",
+    "content brief",
+    "on-page",
+    "meta tags",
+    "search console",
+    "ahrefs",
+    "marketing"
+  ]
+}

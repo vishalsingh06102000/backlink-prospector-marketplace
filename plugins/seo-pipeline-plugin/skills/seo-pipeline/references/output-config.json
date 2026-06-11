@@ -1,0 +1,44 @@
+{
+  "mode": "new-sheet-in-folder",
+  "_comment": "Each run creates a new dated native Google Sheet inside the shared Drive folder below, via create_file with contentMimeType 'text/csv' and parentId = driveFolderId. text/csv auto-converts to a Google Sheet (proven by the sibling skills); text/html does NOT convert (stays a raw file) so do not use it. The brief is one grouped sheet: each part is a block of rows under a 'Section' value, using the shared 'columns' below. Last resort if the connector is unavailable: write a local .csv to the working directory. Output is recommend-only — the team reviews the Sheet and publishes manually. IMPORTANT: CSV-escape every field — wrap any field in double quotes and double any internal quotes — because Detail/Item/meta rows routinely contain commas; an unquoted comma silently misaligns that row's columns.",
+  "driveFolderId": "1S0N1wmOmlO-NySg9TiIvs_TGkCG7Vlam",
+  "driveFolderUrl": "https://drive.google.com/drive/folders/1S0N1wmOmlO-NySg9TiIvs_TGkCG7Vlam",
+  "ahrefsProjectId": 3292255,
+  "defaultCountry": "us",
+  "defaultDepth": "balanced",
+  "sheetTitlePattern": "SEO Pipeline — {topic-or-page} — {date}",
+  "dataFreshnessNote": "Ahrefs keyword/SERP data is fresh; the GSC feed (used for the cannibalization guard) currently lags to ~Dec 2025 — label GSC-derived findings 'as of <month>' and cross-check with site-explorer-organic-keywords when it matters.",
+  "columns": ["Section", "Item", "Detail", "Metrics", "Status"],
+  "sectionOrder": [
+    "Run summary",
+    "Target keyword",
+    "SERP",
+    "Winnability",
+    "Cannibalization",
+    "Outline",
+    "Checklist",
+    "Internal link",
+    "Meta title",
+    "Meta description",
+    "Risks"
+  ],
+  "shortRunSectionOrder": [
+    "Run summary",
+    "Target keyword",
+    "Meta title",
+    "Meta description",
+    "Quick win"
+  ],
+  "statusValues": ["To use", "To do", "Recommended", "Action", ""],
+  "rowConventions": {
+    "Target keyword": "Item=keyword, Detail=role + intent (e.g. 'PRIMARY · informational'), Metrics='vol 80 · KD 0 · TP 30 · winnable', Status='To use'",
+    "SERP": "Item=domain, Detail=page_type / angle, Metrics='DR 94 · #1 · 34 traffic', Status=''",
+    "Winnability": "Item=label (Winnable/Needs links/Hard), Detail=one-line reason, Status=''",
+    "Cannibalization": "Item=conflicting URL or 'none', Detail=recommendation, Status='Action' when a page already ranks",
+    "Outline": "Item=H1/H2/H3 heading, Detail=what to cover, Status=''",
+    "Checklist": "Item=check text, Detail='', Status='To do'",
+    "Internal link": "Item=page path, Detail='anchor: <text> · link IN|OUT', Status=''",
+    "Meta title": "Item=variant text, Detail='recommended' on the pick, Metrics='<n> chars', Status='Recommended' on the pick",
+    "Meta description": "Item=variant text, Detail='recommended' on the pick, Metrics='<n> chars', Status='Recommended' on the pick"
+  }
+}

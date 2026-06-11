@@ -15,6 +15,11 @@
       "name": "seo-content-reviver-plugin",
       "source": "./plugins/seo-content-reviver-plugin",
       "description": "Watch published pages for SEO decay vs each page's historical peak, diagnose the likely cause, and recommend a specific fix per page — into a Google Sheet. Recommend-only."
+    },
+    {
+      "name": "seo-pipeline-plugin",
+      "source": "./plugins/seo-pipeline-plugin",
+      "description": "Carry a topic or page through the full SEO lifecycle and hand back a review-ready brief — target keywords, a SERP-derived outline, on-page checklist, internal links, and an optimized meta title + description — into a Google Sheet. Recommend-only."
     }
   ]
 }
