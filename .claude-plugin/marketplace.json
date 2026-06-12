@@ -20,6 +20,11 @@
       "name": "seo-pipeline-plugin",
       "source": "./plugins/seo-pipeline-plugin",
       "description": "Carry a topic or page through the full SEO lifecycle and hand back a review-ready brief — target keywords, a SERP-derived outline, on-page checklist, internal links, and an optimized meta title + description — into a Google Sheet. Recommend-only."
+    },
+    {
+      "name": "news-roundup-plugin",
+      "source": "./plugins/news-roundup-plugin",
+      "description": "Monitor the chat/messaging/video/AI-dev space and hand back a review-ready news roundup — a narrative Google Doc plus a companion item-log Sheet — serving an external draft, an internal CI watch, and social hooks in one run. Recommend/draft-only."
     }
   ]
 }

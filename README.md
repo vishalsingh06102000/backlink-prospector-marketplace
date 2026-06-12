@@ -24,6 +24,15 @@ brief) or just the tail ("this page is new, give me its keywords + meta"). It ru
 existing page instead of publishing a competitor. Recommend-only — it never writes the article body or
 publishes.
 
+### news-roundup-plugin
+Monitor the **chat / messaging / voice-and-video / AI-developer** space and turn the past week's (or
+month's) moves into **one roundup** — a narrative **Google Doc** plus a companion item-log **Sheet** —
+that serves three audiences at once: a developer-facing **external draft**, an internal
+**competitive-intelligence watch** (what competitors shipped, funding, M&A, standards, CometChat
+mentions), and ready-to-post **social hooks**. Web search is the free spine; Ahrefs brand-radar / social
+/ competitor-crawl signals enrich it on Balanced/Deep. **Recommend/draft-only** — it never publishes,
+posts, or sends.
+
 ## Install (teammates)
 
 Add the marketplace once, then install whichever plugin(s) you want:
@@ -33,6 +42,7 @@ Add the marketplace once, then install whichever plugin(s) you want:
 /plugin install backlink-prospector-plugin@cometchat-marketing
 /plugin install seo-content-reviver-plugin@cometchat-marketing
 /plugin install seo-pipeline-plugin@cometchat-marketing
+/plugin install news-roundup-plugin@cometchat-marketing
 /reload-plugins
 ```
 
@@ -42,6 +52,7 @@ Run them with:
 /backlink-prospector-plugin:backlink-prospector      # find backlink prospects
 /seo-content-reviver-plugin:seo-content-reviver       # find decaying pages to fix
 /seo-pipeline-plugin:seo-pipeline                     # topic/page -> publish-ready brief + meta
+/news-roundup-plugin:news-roundup                     # weekly industry/competitor news roundup
 ```
 
 ## Prerequisites per teammate
@@ -52,7 +63,11 @@ Run them with:
     Ahrefs project must have GSC connected.
   - *seo-pipeline* uses Keyword Explorer + live SERPs for the brief, and GSC (free) for the
     cannibalization guard; the GSC feed only needs to be fresh enough for that check.
-- **Google Drive connector** for writing the output Sheet into the shared folder.
+  - *news-roundup* runs on free **web search** alone (Lean); on Balanced/Deep it adds Ahrefs
+    brand-radar (AI mentions), social-media (competitor posts), and Site Explorer (competitor crawl).
+    Optional Deep-only Gmail scan for inbox press/newsletters.
+- **Google Drive connector** for writing the output Sheet (and, for *news-roundup*, the Doc) into the
+  shared folder. *news-roundup* needs a "News Roundup" folder ID set in its `output-config.json`.
 - *(Optional, future)* a **GA4** connector sharpens the decay report's prioritization (revenue per
   page); not required to run it.
 

@@ -1,0 +1,19 @@
+{
+  "name": "news-roundup-plugin",
+  "description": "Monitor the chat, messaging, voice/video, and AI-developer space and hand back a review-ready news roundup — a narrative Google Doc plus a companion item-log Sheet — serving an external draft, an internal competitive-intelligence watch, and social hooks in one run. Recommend/draft-only.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Vishal Singh",
+    "email": "vishal.singh@cometchat.com"
+  },
+  "keywords": [
+    "news",
+    "news roundup",
+    "competitive intelligence",
+    "industry news",
+    "social",
+    "content",
+    "ahrefs",
+    "marketing"
+  ]
+}
