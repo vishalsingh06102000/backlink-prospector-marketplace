@@ -32,6 +32,18 @@ Detect the kind from URL path + page content, then add these page-specific nodes
 Add **`BreadcrumbList`** on every non-home, hierarchical page (`@id = <page-url>#breadcrumb`), positions
 sequential from Home (1) to the current page. Always build everything inside the single `@graph`.
 
+### Don't under-generate — reproduce curated richness
+The page node should be **rich, not minimal**. When the page (or the team's reference) supports them,
+include the deeper WebPage fields the home reference uses: `mentions` (e.g. each SDK/UI-kit as a
+`SoftwareApplication`), `relatedLink` (key docs/section URLs), `specialty`, `significantLink`,
+`about`/`mainEntity`. A bare WebPage with only url+name+description is **not** acceptable output — match
+the depth of the home gold standard for the page's content.
+
+**Home page = use the team's full approved graph verbatim.** The home page already has a hand-curated,
+approved schema (Organization + WebSite + the full WebPage with all `mentions`/`relatedLink`/`specialty`
++ Service/OfferCatalog). For `https://www.cometchat.com/`, output that complete approved graph — never a
+slimmed-down regeneration.
+
 ## Hybrid rule — Service vs SoftwareApplication
 
 - **Service** — for broad, capability-level pages describing the platform or a capability area
