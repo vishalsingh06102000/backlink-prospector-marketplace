@@ -1,0 +1,14 @@
+{
+  "mode": "json-file-in-folder",
+  "_comment": "How the skill outputs. Primary output is always the validated JSON-LD printed in chat as a ready-to-paste <script type=\"application/ld+json\"> block. Additionally: save the raw .json into the Schema Markup Drive folder, and append a row to the tracking log Sheet (maintained by find-by-title -> read -> merge -> recreate, because this Workspace blocks in-place append). If the Drive connector is unavailable, fall back to writing the .json + a local CSV to the working dir and still print the chat block.",
+  "driveFolderId": "1YsaKVI_gdrnrNsz5vYM5e18BQrMODfC7",
+  "driveFolderUrl": "https://drive.google.com/drive/folders/1YsaKVI_gdrnrNsz5vYM5e18BQrMODfC7",
+  "jsonFileNamePattern": "{page-slug}-{date}.json",
+  "jsonContentMimeType": "application/json",
+  "disableConversionToGoogleType": true,
+  "trackingSheetTitle": "Schema Markup Log",
+  "trackingSheetColumns": [
+    "Page URL", "Page type", "Schema @types", "Validation", "Generated on", "JSON file"
+  ],
+  "richResultsTestUrlPattern": "https://search.google.com/test/rich-results?url={encoded-page-url}"
+}

@@ -1,0 +1,146 @@
+---
+name: schema-markup-generator
+description: >-
+  Generate production-ready JSON-LD schema.org structured-data markup for any web page. Give it a page
+  URL (or pasted HTML/content) and it understands the page, picks the right schema.org types, always
+  includes CometChat's team-approved Organization + WebSite blocks, custom-builds the rest as a linked
+  @graph, validates the markup before returning it, and hands back a ready-to-paste
+  <script type="application/ld+json"> block. Use this skill whenever the user wants "schema markup",
+  "structured data", "JSON-LD", "rich results / rich snippets markup", "schema for this page", "add
+  schema.org", "Organization/Article/Product/Breadcrumb schema", or to mark up a page for Google.
+  Fetches the page via web fetch; writes the .json to Google Drive when connected. It validates but does
+  not deploy — a human pastes the markup into the page head. Trigger it even if the user doesn't say
+  "schema" but clearly wants structured data / rich-result markup for a page.
+---
+
+# Schema Markup Generator
+
+Turn a page URL into **professional, validated JSON-LD schema.org markup** — built to CometChat's
+hand-approved house standard: a single `@graph` with shared `@id`s, the mandatory **Organization +
+WebSite** entities on every page, and page-specific entities (WebPage, Service/SoftwareApplication,
+Article, BreadcrumbList, …) chosen to fit the page. Every output is **run through a validator before it
+is returned** — no broken or guessed markup ever leaves the skill.
+
+It runs inside the current Claude session: **`WebFetch`** to read the page (free), the bundled
+**`references/validate_schema.py`** to test the markup, and the **Google Drive connector** to save the
+`.json` + log it. It **does not deploy** — a human pastes the markup into the page `<head>` and runs
+Google's Rich Results Test for the final eligibility check.
+
+## The pipeline (run these stages in order)
+
+1. **Gather input** — a page URL (default), or pasted HTML/content for an unpublished page. Optional
+   page-type hint. Brand defaults to CometChat.
+2. **Fetch & understand the page** — `WebFetch` it; extract the real facts (see Stage 2).
+3. **Select schema types** — apply `references/type-mapping.md` (the smart core).
+4. **Build the `@graph`** — inject the canonical Organization + WebSite verbatim; add page-specific
+   nodes with shared `@id` links. **Only real data — never invent values** (see the hard rule below).
+5. **Validate (run the test)** — run `references/validate_schema.py`; fix every error; re-run until it
+   passes. See `references/validation.md`.
+6. **Output** — print the validated `<script type="application/ld+json">` block in chat, save the
+   `.json` to Drive, and log it. See `references/output-config.json`.
+7. **Summarize** — what types were emitted and why, validation result, links, and the next steps.
+
+## Inputs
+
+Collect these up front; reuse anything already given, only ask for gaps.
+
+- **Page** — the URL to mark up (e.g. `https://www.cometchat.com/voice-and-video-calls`). Or paste the
+  page's HTML / content if it isn't live yet.
+- **Page-type hint** *(optional)* — if the user knows it ("this is a blog post", "pricing page"). The
+  skill auto-detects otherwise.
+- **Brand** *(optional)* — defaults to CometChat (`references/canonical-entities.json`). Override only
+  if marking up a different property.
+
+If the user just gives a URL, proceed with all defaults.
+
+## Stage 2 — Fetch & understand the page
+
+`WebFetch` the page and pull the **real, on-page facts** the markup will be built from:
+- Canonical URL, `<title>`, meta description, primary `<h1>` and the `<h2>` outline.
+- Page purpose / what it's about; the product or feature it describes.
+- Breadcrumb / nav trail (for `BreadcrumbList`).
+- Blog/article: author name(s), publish + modified dates, hero image, article section.
+- Pricing: plan names + prices + currency (only if actually shown).
+- Listing/comparison: the items listed.
+- Author/contact entities, FAQs (content only — see the deprecated rule).
+
+If a page won't fetch, ask the user to paste its content and continue. Capture only what's verifiably on
+the page — gaps are handled by the anti-fabrication rule, not by guessing.
+
+## Stage 3 — Select schema types
+
+Classify the page and choose the `@type`s using `references/type-mapping.md`. Every page gets
+**Organization + WebSite** (from `references/canonical-entities.json`) plus a **WebPage** node (or a
+subtype: AboutPage / ContactPage / CollectionPage). Then add the page-specific nodes per the mapping —
+including the **hybrid Service-vs-SoftwareApplication** decision for feature pages and a
+**BreadcrumbList** on any hierarchical page. **Never emit deprecated types** (FAQPage, HowTo, WebSite
+SearchAction).
+
+## Stage 4 — Build the @graph
+
+Assemble one document: `{"@context": "https://schema.org", "@graph": [ ... ]}`.
+- Start with the **Organization** and **WebSite** nodes copied **verbatim** from
+  `references/canonical-entities.json` — do not alter them.
+- Add the page node(s), wiring them with shared `@id`s exactly like the home reference:
+  WebPage `isPartOf` → `#website`; `about` / `mainEntity` → `#organization` or the page's Service/app
+  node; Article `publisher` → `#organization`, `author` → a Person node; BreadcrumbList items in order.
+- Use absolute `https` URLs, ISO-8601 dates, numeric price strings + ISO-4217 `priceCurrency`, and a
+  unique absolute `@id` per node (e.g. `https://www.cometchat.com/<path>#webpage`).
+
+**HARD RULE — only real data, never invent.** Use only values present on the page (or in
+canonical-entities). Do **not** fabricate prices, ratings, review counts, dates, author names, images,
+or descriptions. If a recommended field's value isn't on the page, **omit the field** — an accurate
+smaller graph beats an invented richer one. Emit `aggregateRating`/`review` **only** if genuine reviews
+are shown on the page (fake ratings risk a Google manual action).
+
+## Stage 5 — Validate (run the test)
+
+Write the generated JSON to a temp file and run the bundled validator:
+
+```
+python3 references/validate_schema.py <tmpfile>
+```
+
+It checks five layers (JSON syntax → JSON-LD structure / `@id` integrity → ISO dates → URLs → per-type
+required properties) and exits non-zero on any error. **Fix every ERROR and re-run until it passes** —
+never return markup that fails. Review warnings too (e.g. cross-page `@id` references are fine;
+`aggregateRating` warnings mean "confirm the reviews are real"). Full rules: `references/validation.md`.
+Then give the user a **Google Rich Results Test** link (from `output-config.json`'s
+`richResultsTestUrlPattern`) for the human final eligibility check — no programmatic API exists for that.
+
+## Stage 6 — Output
+
+Read `references/output-config.json` and:
+- **Chat (primary):** print the validated markup inside a copy-paste block:
+  `<script type="application/ld+json"> … </script>` — ready to drop into the page `<head>`.
+- **Drive:** save the raw `.json` to the Schema Markup folder (`create_file`, `contentMimeType:
+  "application/json"`, `disableConversionToGoogleType: true`, `parentId: <driveFolderId>`,
+  name from `jsonFileNamePattern`).
+- **Tracking log:** append one row to the "Schema Markup Log" Sheet (columns in `trackingSheetColumns`).
+  Because this Workspace blocks in-place append, maintain the log by **find-by-title → read → merge →
+  recreate**: `search_files` for the log sheet in the folder; if found, `download_file_content` its rows,
+  add the new row, and re-create the sheet (newest = source of truth); if not found, create it with a
+  header + the first row.
+- **Fallback:** if the Drive connector is unavailable, write the `.json` + a local CSV to the working
+  dir and still print the chat block.
+
+## Stage 7 — Summarize
+
+Tell the user: the page type detected, which `@type`s were emitted and a one-line why for each,
+the **validation result** (passed + any warnings to eyeball), the **Drive `.json` link**, the **Rich
+Results Test link**, and the reminder: paste the `<script>` into the page `<head>`, then run the Rich
+Results Test before publishing.
+
+## Style notes
+
+- **Validated, not vibes.** Never hand back markup you haven't run through the validator. "It looks
+  right" is not enough — run the test.
+- **Truthful markup only.** Structured data must reflect what's actually on the page. No invented prices,
+  ratings, dates, or authors. Omit over guess.
+- **Consistency is the point.** Organization + WebSite are identical on every page (from
+  canonical-entities) so CometChat presents one coherent entity graph to Google.
+- **Current best practice.** Skip deprecated types (FAQPage, HowTo, SearchAction). Prefer
+  SoftwareApplication for concrete software/SDK pages, Service for the broad platform — per
+  `references/type-mapping.md`.
+- **Generate, don't deploy.** The skill writes and validates the markup; a human pastes it live and runs
+  the Rich Results Test.

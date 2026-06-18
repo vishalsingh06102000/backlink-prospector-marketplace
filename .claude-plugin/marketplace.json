@@ -25,6 +25,11 @@
       "name": "news-roundup-plugin",
       "source": "./plugins/news-roundup-plugin",
       "description": "Monitor the chat/messaging/video/AI-dev space and hand back a review-ready news roundup — a narrative Google Doc plus a companion item-log Sheet — serving an external draft, an internal CI watch, and social hooks in one run. Recommend/draft-only."
+    },
+    {
+      "name": "schema-markup-generator-plugin",
+      "source": "./plugins/schema-markup-generator-plugin",
+      "description": "Generate production-ready JSON-LD schema.org markup for any page URL — always includes the approved Organization + WebSite, custom-builds the rest as a linked @graph, validates before returning, and outputs a paste-ready <script> block. Validate-only."
     }
   ]
 }

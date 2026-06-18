@@ -1,0 +1,10 @@
+{
+  "name": "schema-markup-generator-plugin",
+  "description": "Generate production-ready JSON-LD schema.org markup for any page URL — always includes CometChat's approved Organization + WebSite, custom-builds the rest as a linked @graph, validates before returning, and outputs a paste-ready <script> block. Validate-only; a human deploys.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Vishal Singh",
+    "email": "vishal.singh@cometchat.com"
+  },
+  "keywords": ["seo", "schema.org", "structured data", "json-ld", "rich results", "marketing"]
+}

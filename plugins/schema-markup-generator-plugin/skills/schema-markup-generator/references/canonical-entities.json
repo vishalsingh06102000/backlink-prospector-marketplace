@@ -1,0 +1,140 @@
+{
+  "_comment": "Team-approved CometChat Organization + WebSite schema.org nodes. These two nodes are MANDATORY and injected VERBATIM into the @graph of EVERY page the skill generates. Do not invent or alter values here — this is the single source of truth. Page-specific nodes (WebPage, Service, Article, etc.) are built per page and reference these by @id. NOTE: SearchAction/sitelinks-searchbox is intentionally absent (deprecated by Google, May 2026). 'mainEntityOfPage' on Organization/WebSite points to the home #webpage (the canonical page for the entity) and is a valid cross-page @id reference on non-home pages.",
+  "organization": {
+    "@type": "Organization",
+    "@id": "https://www.cometchat.com/#organization",
+    "name": "CometChat",
+    "legalName": "CometChat Inc.",
+    "foundingDate": "2019-01-15",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Boulder, Colorado, United States",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Denver",
+        "addressRegion": "Colorado",
+        "addressCountry": "US"
+      }
+    },
+    "areaServed": "Worldwide",
+    "email": "help@cometchat.com",
+    "url": "https://www.cometchat.com/",
+    "logo": {
+      "@type": "ImageObject",
+      "@id": "https://www.cometchat.com/#logo",
+      "url": "https://www.cometchat.com/agent_lp_images/cometchat_logo.png"
+    },
+    "description": "CometChat is a full-stack conversational platform - real-time chat, voice and video calls, AI agents, moderation, notifications, and analytics in one developer-first solution. Used by teams from early-stage startups to global enterprises, CometChat is built around the belief that intelligent, scalable in-app interaction should not require starting from scratch.",
+    "disambiguatingDescription": "CometChat Inc. is a B2B communications infrastructure company headquartered in Denver, Colorado. It offers two core products - a Real-Time Conversations Platform (chat, voice and video calls) and a Full Stack AI Agent Platform - built for product teams embedding communication directly into their own applications.",
+    "mainEntityOfPage": {
+      "@id": "https://www.cometchat.com/#webpage"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1580 N Logan St, Ste 660 PMB 43373",
+      "addressLocality": "Denver",
+      "addressRegion": "Colorado",
+      "postalCode": "80203",
+      "addressCountry": "US"
+    },
+    "founder": [
+      {
+        "@type": "Person",
+        "@id": "https://www.cometchat.com/#anuj-garg",
+        "name": "Anuj Garg",
+        "jobTitle": "CEO & Co-founder",
+        "url": "https://www.linkedin.com/in/thechatguy",
+        "sameAs": [
+          "https://www.linkedin.com/in/thechatguy"
+        ],
+        "worksFor": {
+          "@id": "https://www.cometchat.com/#organization"
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.cometchat.com/#anant-garg",
+        "name": "Anant Garg",
+        "jobTitle": "Founder & CTO",
+        "url": "https://www.linkedin.com/in/anant-garg",
+        "sameAs": [
+          "https://www.linkedin.com/in/anant-garg"
+        ],
+        "worksFor": {
+          "@id": "https://www.cometchat.com/#organization"
+        }
+      }
+    ],
+    "sameAs": [
+      "https://www.linkedin.com/company/cometchat/",
+      "https://www.youtube.com/c/CometChat",
+      "https://twitter.com/CometChat",
+      "https://github.com/cometchat",
+      "https://www.instagram.com/cometchat/",
+      "https://www.g2.com/products/cometchat/reviews",
+      "https://www.producthunt.com/products/cometchat",
+      "https://dev.to/cometchat",
+      "https://theorg.com/org/cometchat",
+      "https://pitchbook.com/profiles/company/264827-44",
+      "https://www.capterra.in/software/176671/cometchat",
+      "https://marketplace.microsoft.com/en-gb/product/web-apps/cometchatinc1647970968758.cometchat",
+      "https://aws.amazon.com/marketplace/pp/prodview-fw2xanuwjh52q?sr=0-1&ref_=beagle&applicationId=AWSMPContessa"
+    ],
+    "knowsAbout": [
+      "In-app messaging",
+      "Chat SDK",
+      "Chat API",
+      "Voice and video calling",
+      "Real-time communication",
+      "AI agents",
+      "AI copilots",
+      "Moderation and guardrails",
+      "User engagement",
+      "Developer APIs",
+      "UI kits",
+      "Multi-tenant infrastructure"
+    ],
+    "contactPoint": [
+      {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "url": "https://www.cometchat.com/contact-sales"
+      },
+      {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "url": "https://help.cometchat.com/hc/en-us/requests/new"
+      }
+    ]
+  },
+  "website": {
+    "@type": "WebSite",
+    "@id": "https://www.cometchat.com/#website",
+    "url": "https://www.cometchat.com/",
+    "name": "CometChat",
+    "alternateName": [
+      "CometChat Platform",
+      "CometChat Communication Platform"
+    ],
+    "description": "CometChat provides in-app chat, voice and video calling, SDKs, APIs, UI kits, and AI agent communication infrastructure for applications and websites.",
+    "publisher": {
+      "@id": "https://www.cometchat.com/#organization"
+    },
+    "mainEntityOfPage": {
+      "@id": "https://www.cometchat.com/#webpage"
+    },
+    "potentialAction": [
+      {
+        "@type": "RegisterAction",
+        "name": "Start for free",
+        "target": "https://app.cometchat.com/signup"
+      },
+      {
+        "@type": "ScheduleAction",
+        "name": "Schedule a demo",
+        "target": "https://www.cometchat.com/contact-sales"
+      }
+    ],
+    "inLanguage": "en"
+  }
+}

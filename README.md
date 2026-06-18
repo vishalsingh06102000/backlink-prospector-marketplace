@@ -33,6 +33,14 @@ mentions), and ready-to-post **social hooks**. Web search is the free spine; Ahr
 / competitor-crawl signals enrich it on Balanced/Deep. **Recommend/draft-only** — it never publishes,
 posts, or sends.
 
+### schema-markup-generator-plugin
+Give it a **page URL** (or pasted HTML) and get **production-ready JSON-LD schema.org markup**: it
+understands the page, picks the right schema types, always includes the team-approved **Organization +
+WebSite** blocks, custom-builds the rest as a linked `@graph`, **validates the markup before returning
+it** (bundled 5-layer validator), and hands back a paste-ready `<script type="application/ld+json">`
+block — plus a saved `.json` in the Schema Markup Drive folder. **Validate-only** — a human pastes it
+into the page `<head>` and runs Google's Rich Results Test.
+
 ## Install (teammates)
 
 Add the marketplace once, then install whichever plugin(s) you want:
@@ -43,6 +51,7 @@ Add the marketplace once, then install whichever plugin(s) you want:
 /plugin install seo-content-reviver-plugin@cometchat-marketing
 /plugin install seo-pipeline-plugin@cometchat-marketing
 /plugin install news-roundup-plugin@cometchat-marketing
+/plugin install schema-markup-generator-plugin@cometchat-marketing
 /reload-plugins
 ```
 
@@ -53,6 +62,7 @@ Run them with:
 /seo-content-reviver-plugin:seo-content-reviver       # find decaying pages to fix
 /seo-pipeline-plugin:seo-pipeline                     # topic/page -> publish-ready brief + meta
 /news-roundup-plugin:news-roundup                     # weekly industry/competitor news roundup
+/schema-markup-generator-plugin:schema-markup-generator  # page URL -> validated JSON-LD schema markup
 ```
 
 ## Prerequisites per teammate
@@ -66,8 +76,11 @@ Run them with:
   - *news-roundup* runs on free **web search** alone (Lean); on Balanced/Deep it adds Ahrefs
     brand-radar (AI mentions), social-media (competitor posts), and Site Explorer (competitor crawl).
     Optional Deep-only Gmail scan for inbox press/newsletters.
-- **Google Drive connector** for writing the output Sheet (and, for *news-roundup*, the Doc) into the
-  shared folder. *news-roundup* needs a "News Roundup" folder ID set in its `output-config.json`.
+  - *schema-markup-generator* needs **no Ahrefs** — it reads the page with free **web fetch** and
+    validates with a bundled Python script (stdlib only).
+- **Google Drive connector** for writing the output Sheet (and, for *news-roundup*, the Doc; for
+  *schema-markup-generator*, the `.json`) into the shared folder. *news-roundup* needs a "News Roundup"
+  folder ID and *schema-markup-generator* a "Schema Markup" folder ID set in their `output-config.json`.
 - *(Optional, future)* a **GA4** connector sharpens the decay report's prioritization (revenue per
   page); not required to run it.
 
