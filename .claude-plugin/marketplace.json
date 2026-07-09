@@ -29,7 +29,7 @@
     {
       "name": "schema-markup-generator-plugin",
       "source": "./plugins/schema-markup-generator-plugin",
-      "description": "Generate production-ready JSON-LD schema.org markup for any page URL — always includes the approved Organization + WebSite, custom-builds the rest as a linked @graph, validates before returning, and outputs a paste-ready <script> block. Validate-only."
+      "description": "Generate production-ready JSON-LD schema.org markup for any page URL — always includes the approved Organization + WebSite, custom-builds the rest as a linked @graph, validates before returning, and outputs paste-ready raw JSON-LD for the CMS (Storyblok Structured Data Markup field). Validate-only."
     }
   ]
 }
