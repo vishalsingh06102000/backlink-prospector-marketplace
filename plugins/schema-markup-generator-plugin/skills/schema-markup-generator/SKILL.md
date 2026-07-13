@@ -8,8 +8,9 @@ description: >-
   Storyblok's Structured Data Markup field). Use this skill whenever the user wants "schema markup",
   "structured data", "JSON-LD", "rich results / rich snippets markup", "schema for this page", "add
   schema.org", "Organization/Article/Product/Breadcrumb schema", or to mark up a page for Google.
-  Fetches the page via web fetch; writes the .json to Google Drive when connected. It validates but does
-  not deploy — a human pastes the JSON-LD into the CMS (Storyblok Structured Data Markup field). Trigger it even if the user doesn't say
+  Fetches the page via web fetch and returns the validated JSON-LD in chat only — it does not save
+  anything to Google Drive. It validates but does not deploy — a human pastes the JSON-LD into the CMS
+  (Storyblok Structured Data Markup field). Trigger it even if the user doesn't say
   "schema" but clearly wants structured data / rich-result markup for a page.
 ---
 
@@ -21,11 +22,11 @@ WebSite** entities on every page, and page-specific entities (WebPage, Service/S
 Article, BreadcrumbList, …) chosen to fit the page. Every output is **run through a validator before it
 is returned** — no broken or guessed markup ever leaves the skill.
 
-It runs inside the current Claude session: **`WebFetch`** to read the page (free), the bundled
-**`references/validate_schema.py`** to test the markup, and the **Google Drive connector** to save the
-`.json` + log it. It **does not deploy** — a human pastes the raw JSON-LD into Storyblok's Structured
-Data Markup field (or wraps it in `<script type="application/ld+json">` for a direct `<head>` embed) and
-runs Google's Rich Results Test for the final eligibility check.
+It runs inside the current Claude session: **`WebFetch`** to read the page (free) and the bundled
+**`references/validate_schema.py`** to test the markup. **Output is chat-only — it does NOT save to
+Google Drive and does NOT write a tracking log.** It **does not deploy** — a human pastes the raw
+JSON-LD into Storyblok's Structured Data Markup field (or wraps it in `<script type="application/ld+json">`
+for a direct `<head>` embed) and runs Google's Rich Results Test for the final eligibility check.
 
 ## The pipeline (run these stages in order)
 
@@ -37,9 +38,10 @@ runs Google's Rich Results Test for the final eligibility check.
    nodes with shared `@id` links. **Only real data — never invent values** (see the hard rule below).
 5. **Validate (run the test)** — run `references/validate_schema.py`; fix every error; re-run until it
    passes. See `references/validation.md`.
-6. **Output** — print the validated **raw JSON-LD** (paste-ready for the CMS field) in chat, save the
-   `.json` to Drive, and log it. See `references/output-config.json`.
-7. **Summarize** — what types were emitted and why, validation result, links, and the next steps.
+6. **Output** — print the validated **raw JSON-LD** (paste-ready for the CMS field) in chat. Chat-only —
+   no Drive save, no tracking log. See `references/output-config.json`.
+7. **Summarize** — what types were emitted and why, validation result, the Rich Results Test link, and
+   the next steps.
 
 ## Inputs
 
@@ -109,35 +111,29 @@ never return markup that fails. Review warnings too (e.g. cross-page `@id` refer
 Then give the user a **Google Rich Results Test** link (from `output-config.json`'s
 `richResultsTestUrlPattern`) for the human final eligibility check — no programmatic API exists for that.
 
-## Stage 6 — Output
+## Stage 6 — Output (chat-only)
 
-Read `references/output-config.json` and:
-- **Chat (primary):** print the validated markup as **raw JSON-LD** (just the
-  `{"@context": …, "@graph": […]}` document — **no `<script>` wrapper**) inside a copy-paste block.
-  This is the paste-ready form for CometChat's CMS: it goes straight into Storyblok's **Structured Data
-  Markup** field, which supplies the `<script>` wrapper itself. Directly below the block, add one short
-  note for the head-paste case: *"Pasting into a page `<head>` instead of the Storyblok field? Wrap this
-  in `<script type="application/ld+json"> … </script>`."* Do **not** wrap the primary block — leaving the
-  tags in breaks the Storyblok field (invalid JSON / double-wrapped `<script>`), the recurring error this
-  is designed to prevent. The Drive `.json` and this chat block are now identical (both raw JSON-LD).
-- **Drive:** save the raw `.json` to the Schema Markup folder (`create_file`, `contentMimeType:
-  "application/json"`, `disableConversionToGoogleType: true`, `parentId: <driveFolderId>`,
-  name from `jsonFileNamePattern`).
-- **Tracking log:** append one row to the "Schema Markup Log" Sheet (columns in `trackingSheetColumns`).
-  Because this Workspace blocks in-place append, maintain the log by **find-by-title → read → merge →
-  recreate**: `search_files` for the log sheet in the folder; if found, `download_file_content` its rows,
-  add the new row, and re-create the sheet (newest = source of truth); if not found, create it with a
-  header + the first row.
-- **Fallback:** if the Drive connector is unavailable, write the `.json` + a local CSV to the working
-  dir and still print the raw JSON-LD chat block.
+Print the validated markup as **raw JSON-LD** (just the `{"@context": …, "@graph": […]}` document —
+**no `<script>` wrapper**) inside a copy-paste block. This is the paste-ready form for CometChat's CMS:
+it goes straight into Storyblok's **Structured Data Markup** field, which supplies the `<script>` wrapper
+itself. Directly below the block, add one short note for the head-paste case: *"Pasting into a page
+`<head>` instead of the Storyblok field? Wrap this in `<script type="application/ld+json"> … </script>`."*
+Do **not** wrap the primary block — leaving the tags in breaks the Storyblok field (invalid JSON /
+double-wrapped `<script>`), the recurring error this is designed to prevent.
+
+**Do NOT save anything to Google Drive and do NOT write/update any tracking log or Sheet.** The chat
+block is the sole deliverable. (This is deliberate: the old "recreate the whole log Sheet every run"
+workaround was a token sink and left duplicate sheets behind. `references/output-config.json` is kept
+only for the `richResultsTestUrlPattern` used in Stage 5/7 — ignore any Drive/log fields in it.)
 
 ## Stage 7 — Summarize
 
 Tell the user: the page type detected, which `@type`s were emitted and a one-line why for each,
-the **validation result** (passed + any warnings to eyeball), the **Drive `.json` link**, the **Rich
-Results Test link**, and the reminder: paste the raw JSON-LD into Storyblok's **Structured Data Markup**
-field (or, for a direct `<head>` embed, wrap it in `<script type="application/ld+json"> … </script>`),
-then run the Rich Results Test before publishing.
+the **validation result** (passed + any warnings to eyeball), the **Rich Results Test link**, and the
+reminder: paste the raw JSON-LD into Storyblok's **Structured Data Markup** field (or, for a direct
+`<head>` embed, wrap it in `<script type="application/ld+json"> … </script>`), then run the Rich Results
+Test before publishing. **Do not mention a Drive file or tracking log — this skill no longer writes
+either.**
 
 ## Style notes
 
@@ -152,8 +148,11 @@ then run the Rich Results Test before publishing.
   `references/type-mapping.md`.
 - **Generate, don't deploy.** The skill writes and validates the markup; a human pastes it live and runs
   the Rich Results Test.
-- **Raw JSON-LD is the deliverable, not the `<script>` wrapper.** The chat block and the Drive `.json`
-  both contain only the `{"@context": …, "@graph": […]}` document, because it's pasted into Storyblok's
-  Structured Data Markup field (which adds the `<script>` tags itself). The `<script type="application/
-  ld+json">…</script>` wrapper is mentioned only as an optional note for a direct `<head>` embed — never
-  put it around the primary block, or the Storyblok field breaks with validation errors.
+- **Raw JSON-LD is the deliverable, not the `<script>` wrapper.** The chat block contains only the
+  `{"@context": …, "@graph": […]}` document, because it's pasted into Storyblok's Structured Data Markup
+  field (which adds the `<script>` tags itself). The `<script type="application/ld+json">…</script>`
+  wrapper is mentioned only as an optional note for a direct `<head>` embed — never put it around the
+  primary block, or the Storyblok field breaks with validation errors.
+- **Chat-only, no Drive.** Never call the Google Drive connector, never create a `.json` file, and never
+  create/read/recreate the "Schema Markup Log" Sheet. The validated JSON-LD printed in chat is the only
+  output.
