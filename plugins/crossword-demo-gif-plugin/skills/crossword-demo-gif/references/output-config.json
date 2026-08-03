@@ -1,0 +1,13 @@
+{
+  "mode": "local-files",
+  "outputDir": "./crossword-demos",
+  "filenamePattern": "{slug}-{layout}.gif",
+  "layouts": ["desktop", "mobile"],
+  "defaults": {
+    "fps": 13,
+    "desktopWidth": 1000,
+    "maxColors": 160,
+    "targetSeconds": "12-16"
+  },
+  "notes": "outputDir is resolved relative to the current working directory unless an absolute path is given. Files are named <slug>-<layout>.gif where <slug> is the site hostname (www. stripped). Return the absolute paths to the user and surface them with SendUserFile."
+}

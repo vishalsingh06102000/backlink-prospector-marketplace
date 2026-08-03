@@ -41,6 +41,15 @@ it** (bundled 5-layer validator), and hands back a paste-ready `<script type="ap
 block — plus a saved `.json` in the Schema Markup Drive folder. **Validate-only** — a human pastes it
 into the page `<head>` and runs Google's Rich Results Test.
 
+### crossword-demo-gif-plugin
+Give it a **website URL** and get two **screen-recording-style GIFs** — a **desktop** and a **mobile**
+layout — of that live site with CometChat's **Crossword** AI widget (the "CometChat Concierge"
+assistant, **Aster**) floating on top and running a short conversation **auto-tailored to the site's
+business**. It looks like someone recorded their screen to show how Crossword would look embedded on the
+prospect's site — perfect for personalized outreach. Uses **Playwright** to record the real site with the
+widget injected, then **ffmpeg** to encode the GIFs, saved locally. **Demo asset only** — nothing is
+deployed or changed on the target site.
+
 ## Install (teammates)
 
 Add the marketplace once, then install whichever plugin(s) you want:
@@ -52,6 +61,7 @@ Add the marketplace once, then install whichever plugin(s) you want:
 /plugin install seo-pipeline-plugin@cometchat-marketing
 /plugin install news-roundup-plugin@cometchat-marketing
 /plugin install schema-markup-generator-plugin@cometchat-marketing
+/plugin install crossword-demo-gif-plugin@cometchat-marketing
 /reload-plugins
 ```
 
@@ -63,6 +73,7 @@ Run them with:
 /seo-pipeline-plugin:seo-pipeline                     # topic/page -> publish-ready brief + meta
 /news-roundup-plugin:news-roundup                     # weekly industry/competitor news roundup
 /schema-markup-generator-plugin:schema-markup-generator  # page URL -> validated JSON-LD schema markup
+/crossword-demo-gif-plugin:crossword-demo-gif            # website URL -> desktop+mobile demo GIFs with the Crossword widget
 ```
 
 ## Prerequisites per teammate
@@ -78,6 +89,9 @@ Run them with:
     Optional Deep-only Gmail scan for inbox press/newsletters.
   - *schema-markup-generator* needs **no Ahrefs** — it reads the page with free **web fetch** and
     validates with a bundled Python script (stdlib only).
+  - *crossword-demo-gif* needs **no Ahrefs and no Google Drive**. It needs **Node.js** + **ffmpeg** on
+    the machine; on first use run `npm install` inside
+    `crossword-demo-gif/references/` (installs Playwright + Chromium). Output GIFs are saved locally.
 - **Google Drive connector** for writing the output Sheet (and, for *news-roundup*, the Doc; for
   *schema-markup-generator*, the `.json`) into the shared folder. *news-roundup* needs a "News Roundup"
   folder ID and *schema-markup-generator* a "Schema Markup" folder ID set in their `output-config.json`.

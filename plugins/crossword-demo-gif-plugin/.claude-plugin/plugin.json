@@ -1,0 +1,10 @@
+{
+  "name": "crossword-demo-gif-plugin",
+  "description": "Turn any website URL into a screen-recording-style GIF (desktop + mobile) showing that site with CometChat's Crossword AI widget (CometChat Concierge / Aster) overlaid and running a conversation auto-tailored to the site's business. Saves GIFs locally. Demo/marketing asset — nothing is deployed to the target site.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Vishal Singh",
+    "email": "vishal.singh@cometchat.com"
+  },
+  "keywords": ["cometchat", "crossword", "demo", "gif", "chat widget", "outreach", "marketing"]
+}

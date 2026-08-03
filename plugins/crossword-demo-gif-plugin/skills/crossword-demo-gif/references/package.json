@@ -1,0 +1,14 @@
+{
+  "name": "crossword-demo-gif",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Render a screen-recording-style GIF of any website with the CometChat Concierge (Crossword) AI widget overlaid, mid-conversation. Desktop + mobile.",
+  "type": "commonjs",
+  "scripts": {
+    "postinstall": "playwright install chromium",
+    "render": "node render.js"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}
